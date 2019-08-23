@@ -1,0 +1,11 @@
+{
+  "name": "com.disasterrecovery",
+  "version": "1.0.0",
+  "description": "Disaster Recovery project in TypeScript and NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Guido Heredia, Jerry Morris, Ketu Patel, Andrea Pinardi",
+  "license": "ISC"
+}
