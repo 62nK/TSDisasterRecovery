@@ -5,11 +5,12 @@ const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 // Local
-const userSchema = require('../models/user');
+const userModel = require('../models/user.js');
 const properties = require('../properties.js');
 
 // Constants
 const router = express.Router();
+const userSchema = userModel.User;
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
@@ -37,15 +38,15 @@ router.post('/signup', function(request, response){
 });
 
 router.post('/signin', function(request, response){
-    userSchema.findOne({email:request.body.email})
+    userSchema.findOne({username:request.body.username})
     .then(function(user){
         bcrypt.compare(request.body.password, user.password, function(error, result){
             if(error){
                 return response.status(401).json({failure: "Anauthorized Access"});
             }
             if(result){
-                const token = jsonwebtoken.sign({ username: user.username, _id:user.id}, properties.encryption.privateKey);
-                return response.status(200).json({success: "User Authenticated", token: token});
+                const token = jsonwebtoken.sign({ username: user.username, role: user.role, _id:user.id}, properties.encryption.privateKey);
+                return response.status(200).json({success: "User Authenticated", token: token, message: "welcome "+user.username});
             }
             response.status(500).json({error: error});
         });

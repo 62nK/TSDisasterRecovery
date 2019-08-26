@@ -2,9 +2,14 @@
 // Third Party
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 // Local
 const properties = require('./properties.js');
 const userapis = require('./apis/userapis.js');
+const userModel = require('./models/user.js');
+
+// Constants
+const userSchema = userModel.User;
 
 // Database connection
 mongoose.connect(properties.database.url, error =>{
@@ -14,6 +19,44 @@ mongoose.connect(properties.database.url, error =>{
         console.log("Connected to MongoDB");
     }
 });
+
+// Default users
+var saltRounds = 6;
+bcrypt.hash(properties.defaultAdmin.password, saltRounds, function(error, hash){
+    if(error){
+        console.log({error: error});
+    }
+    else{
+        const defaultAdmin = new userSchema({
+            username : properties.defaultAdmin.username,
+            role : properties.defaultAdmin.role,
+            password : hash
+        });
+        defaultAdmin.save().then(function(result){
+            console.log("default admin created successfully");
+        }).catch(error=>{
+            console.log("error creating default admin");
+        });
+    }
+});
+bcrypt.hash(properties.defaultUser.password, saltRounds, function(error, hash){
+    if(error){
+        console.log({error: error});
+    }
+    else{
+        const defaultUser = new userSchema({
+            username : properties.defaultUser.username,
+            role : properties.defaultUser.role,
+            password : hash
+        });
+        defaultUser.save().then(function(result){
+            console.log("default user created successfully");
+        }).catch(error=>{
+            console.log("error creating default user");
+        });
+    }
+});
+
 
 // Constants
 const app = express();
