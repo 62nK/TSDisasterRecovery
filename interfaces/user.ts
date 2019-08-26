@@ -1,5 +1,5 @@
 export interface IUser {
   username: string;
   password: string;
-  role: string; // ADMIN/REGULAR
+  role: number; // ADMIN/REGULAR
 }

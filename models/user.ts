@@ -4,15 +4,10 @@ import { Document, Schema, Model, model} from "mongoose";
 // Local
 import { IUser } from "../interfaces/user";
 
-enum role{
-    ADMIN,
-    REGULAR_USER
-}
-
 export const UserSchema: Schema = new Schema({
     username: String,
     password: String,
-    role: role // ADMIN/REGULAR_USER
+    role: Number // ADMIN=0/REGULAR_USER=1
 });
 
 export interface IUserModel extends IUser, Document {}

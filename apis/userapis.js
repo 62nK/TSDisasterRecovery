@@ -5,7 +5,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 // Local
-const userSchema = require('../models/user.js');
+const userSchema = require('../models/user');
 const properties = require('../properties.js');
 
 // Constants
@@ -24,6 +24,7 @@ router.post('/signup', function(request, response){
         else{
             const newUser = new userSchema({
                 username : request.body.username,
+                role : request.body.role,
                 password : hash
             });
             newUser.save().then(function(result){
