@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 // Local
 const userModel = require('../models/user.js');
 const properties = require('../properties.js');
-const validation = require('../apis/validation.js');
+const validation = require('./validation.js');
 
 // Constants
 const router = express.Router();
@@ -51,12 +51,6 @@ router.post('/signin', function(request, response){
             response.status(500).json({error: error});
         });
     });
-});
-
-
-router.get('/list', validation, (request, response)=>{
-    let username = jsonwebtoken.verify(request.token, properties.encryption.privateKey).username;
-    console.log(username);
 });
 
 module.exports = router;

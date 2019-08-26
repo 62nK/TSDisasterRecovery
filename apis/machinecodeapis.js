@@ -5,59 +5,33 @@ const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 // Local
-const userModel = require('../models/user.js');
+const machinecodeModel = require('../models/machinecode');
 const properties = require('../properties.js');
 const validation = require('../apis/validation.js');
 
 // Constants
 const router = express.Router();
-const userSchema = userModel.User;
+const machinecodeSchema = machinecodeModel.MachineCode;
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
 // Routes
-router.post('/signup', function(request, response){
-    var saltRounds = 6;
-    bcrypt.hash(request.body.password, properties.encryption.saltRounds, function(error, hash){
-        if(error){
-            return response.status(500).json({error: error})
+router.get('/validate', validation, (request, response)=>{
+    jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
+        if(error) {
+            response.status(403).json({error: error});
+        } 
+        else if(authData.role==properties.ADMIN){ 
+            response.status(200).json({message: "user is ADMIN", authData: authData});
+        }
+        else if(authData.role==properties.ADMIN){
+            response.status(200).json({message: "user is REGULAR", authData: authData});
         }
         else{
-            const newUser = new userSchema({
-                username : request.body.username,
-                role : request.body.role,
-                password : hash
-            });
-            newUser.save().then(function(result){
-                response.status(200).json({success: "new user created successfully!"});
-            }).catch(error=>{
-                response.status(500).json({error: error});
-            });
+            response.status(401).json({failure: "Unauthorized Access"});
         }
     });
-});
-
-router.post('/signin', function(request, response){
-    userSchema.findOne({username:request.body.username})
-    .then(function(user){
-        bcrypt.compare(request.body.password, user.password, function(error, result){
-            if(error){
-                return response.status(401).json({failure: "Unauthorized Access"});
-            }
-            if(result){
-                const token = jsonwebtoken.sign({username: user.username, role: user.role, _id:user.id}, properties.encryption.privateKey);
-                return response.status(200).json({success: "User Authenticated", token: token, message: "welcome "+user.username});            
-            }
-            response.status(500).json({error: error});
-        });
-    });
-});
-
-
-router.get('/list', validation, (request, response)=>{
-    let username = jsonwebtoken.verify(request.token, properties.encryption.privateKey).username;
-    console.log(username);
 });
 
 module.exports = router;

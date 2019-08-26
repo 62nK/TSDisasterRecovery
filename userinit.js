@@ -23,7 +23,7 @@ module.exports = function(user){
             defaultUser.save().then(function(result){
                 console.log("default user "+user.username+" created successfully");
             }).catch(error=>{
-                console.log("error creating default user "+user.username);
+                console.log(error);
             });
         }
     });
