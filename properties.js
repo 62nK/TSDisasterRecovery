@@ -1,5 +1,5 @@
 module.exports.database = {
-    url: "mongodb://localhost:27017/school-db",
+    url: "mongodb://localhost:27017/disaster-recovery-db",
     username: "",
     password: ""
 }
