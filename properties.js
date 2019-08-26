@@ -18,5 +18,6 @@ module.exports.defaultUser = {
 module.exports.port = process.env.PORT || 3001;
 
 module.exports.encryption = {
-    privateKey : '*&%^A*&G@N'
+    privateKey : '*&%^A*&G@N',
+    saltRounds: 6
 }

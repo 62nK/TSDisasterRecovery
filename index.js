@@ -12,7 +12,7 @@ const userModel = require('./models/user.js');
 const userSchema = userModel.User;
 
 // Database connection
-mongoose.connect(properties.database.url, error =>{
+mongoose.connect(properties.database.url, { useNewUrlParser: true }, error =>{
     if(error){
         console.log("Error! "+ error);
     }else{
@@ -21,8 +21,7 @@ mongoose.connect(properties.database.url, error =>{
 });
 
 // Default users
-var saltRounds = 6;
-bcrypt.hash(properties.defaultAdmin.password, saltRounds, function(error, hash){
+bcrypt.hash(properties.defaultAdmin.password, properties.encryption.saltRounds, function(error, hash){
     if(error){
         console.log({error: error});
     }
@@ -39,7 +38,7 @@ bcrypt.hash(properties.defaultAdmin.password, saltRounds, function(error, hash){
         });
     }
 });
-bcrypt.hash(properties.defaultUser.password, saltRounds, function(error, hash){
+bcrypt.hash(properties.defaultUser.password, properties.encryption.saltRounds, function(error, hash){
     if(error){
         console.log({error: error});
     }

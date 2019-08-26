@@ -19,7 +19,7 @@ router.use(bodyParser.json());
 // Routes
 router.post('/signup', function(request, response){
     var saltRounds = 6;
-    bcrypt.hash(request.body.password, saltRounds, function(error, hash){
+    bcrypt.hash(request.body.password, properties.encryption.saltRounds, function(error, hash){
         if(error){
             return response.status(500).json({error: error})
         }

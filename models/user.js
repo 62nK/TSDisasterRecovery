@@ -3,6 +3,7 @@ exports.__esModule = true;
 // Models
 // Third Party
 var mongoose_1 = require("mongoose");
+
 var userSchema = new mongoose_1.Schema({
     username: String,
     password: String,
