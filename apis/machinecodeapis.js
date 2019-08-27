@@ -17,6 +17,51 @@ router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
 // Routes
+
+// Get list of machine codes
+router.get('/list', validation, (request, response)=>{
+    jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
+        if(error) {
+            response.status(403).json({error: error});
+        } 
+        else if(authData.role==properties.ADMIN){ 
+            machinecodeSchema.find((error, machinecodeList)=>{
+                if(error) {
+                    response.status(500).json({error: error});
+                }
+                else{
+                    response.status(200).json({ message: "machinecode updated successfully", machinecodeList: machinecodeList});
+                }
+            });
+        }
+        else{
+            response.status(401).json({failure: "User doesn't have necessary priviledges to complete this action"});
+        }
+    });
+});
+
+// Get list of machine codes
+router.get('/:id', validation, (request, response)=>{
+    jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
+        if(error) {
+            response.status(403).json({error: error});
+        } 
+        else if(authData.role==properties.ADMIN){ 
+            machinecodeSchema.find((error, machinecodeList)=>{
+                if(error) {
+                    response.status(500).json({error: error});
+                }
+                else{
+                    response.status(200).json({ message: "machinecode updated successfully", machinecodeList: machinecodeList});
+                }
+            });
+        }
+        else{
+            response.status(401).json({failure: "User doesn't have necessary priviledges to complete this action"});
+        }
+    });
+});
+
 // Add machine code
 router.post('/create', validation, (request, response)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
@@ -55,7 +100,7 @@ router.post('/update/:id', validation, (request, response, next)=>{
 
                 }
                 else{
-                    response.status(200).json({ message: "machinecode updated successfully", machinecode: machinecode, error: error});
+                    response.status(200).json({ message: "machinecode updated successfully", machinecode: machinecode});
                 }
             });
         }
@@ -77,7 +122,7 @@ router.post('/remove/:id', validation, (request, response, next)=>{
                     response.status(500).json({error: error});
                 }
                 else{
-                    response.status(200).json({ message: "machinecode removed successfully", machinecode: machinecode, error: error});
+                    response.status(200).json({ message: "machinecode removed successfully", machinecode: machinecode});
                 }
             });
         }
