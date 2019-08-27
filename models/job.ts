@@ -3,10 +3,10 @@ import {Document, Schema, Model, model} from "mongoose";
 import { IJob } from "../interfaces/job";
 ​
 export const JobSchema: Schema = new Schema ({
-    jobCode : String,
+    code : String,
     description : String,
     hourlyRate : Number,
-    maxHoursPerDay: Number
+    maxDailyHours: Number
 });
 ​
 export interface IJobModel extends IJob, Document {}

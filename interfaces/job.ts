@@ -1,6 +1,6 @@
 export interface IJob {
-    jobCode : string;
+    code : string;
     description : string;
     hourlyRate : number;
-    maxHoursPerDay: number;
+    maxDailyHours: number;
 }
