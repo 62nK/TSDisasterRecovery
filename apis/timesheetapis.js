@@ -4,13 +4,13 @@ const express = require('express');
 const jsonwebtoken = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 // Local
-const machinecodeModel = require('../models/machinecode');
+const timesheetModel = require('../models/timesheet');
 const properties = require('../properties.js');
 const validation = require('../apis/validation.js');
 
 // Constants
 const router = express.Router();
-const machinecodeSchema = machinecodeModel.MachineCode;
+const timesheetSchema = timesheetModel.TimeSheet;
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
@@ -23,18 +23,15 @@ router.get('/list', validation, (request, response)=>{
         if(error) {
             response.status(403).json({error: error});
         } 
-        else if(authData.role==properties.ADMIN){ 
+        else{ 
             machinecodeSchema.find((error, machinecodeList)=>{
                 if(error) {
                     response.status(500).json({error: error});
                 }
                 else{
-                    response.status(200).json({machinecodeList: machinecodeList});
+                    response.status(200).json({ message: "machinecode updated successfully", machinecodeList: machinecodeList});
                 }
             });
-        }
-        else{
-            response.status(401).json({failure: "User doesn't have necessary priviledges to complete this action"});
         }
     });
 });
@@ -46,12 +43,12 @@ router.get('/:id', validation, (request, response)=>{
             response.status(403).json({error: error});
         } 
         else if(authData.role==properties.ADMIN){ 
-            machinecodeSchema.find((error, machinecode)=>{
+            machinecodeSchema.find((error, machinecodeList)=>{
                 if(error) {
                     response.status(500).json({error: error});
                 }
                 else{
-                    response.status(200).json({machinecode: machinecode});
+                    response.status(200).json({ message: "machinecode updated successfully", machinecodeList: machinecodeList});
                 }
             });
         }

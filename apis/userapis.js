@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 // Local
 const userModel = require('../models/user.js');
 const properties = require('../properties.js');
-const validation = require('./validation.js');
 
 // Constants
 const router = express.Router();

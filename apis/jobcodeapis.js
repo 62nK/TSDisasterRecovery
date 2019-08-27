@@ -29,7 +29,7 @@ router.get('/list', validation, (request, response)=>{
                     response.status(500).json({error: error});
                 }
                 else{
-                    response.status(200).json({ message: "job code updated successfully", jobcodeList: jobcodeList});
+                    response.status(200).json({jobcodeList: jobcodeList});
                 }
             });
         }
@@ -51,7 +51,7 @@ router.get('/:id', validation, (request, response)=>{
                     response.status(500).json({error: error});
                 }
                 else{
-                    response.status(200).json({ message: "job code updated successfully", jobcode: jobcode});
+                    response.status(200).json({jobcode: jobcode});
                 }
             });
         }

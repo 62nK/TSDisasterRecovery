@@ -5,11 +5,11 @@ import { Document, Schema, Model, model} from "mongoose";
 import { ITimesheet } from "../interfaces/timesheet";
 
 export const TimeSheetSchema: Schema = new Schema({
-
     siteCode: Number,
     contractorName: String,
-    date: Date
+    date: Date,
+    entryCodes: [String]
 });
 
 export interface ITimesheetModel extends ITimesheet, Document {}
-export const MachineCode: Model<ITimesheetModel> = model<ITimesheetModel>("TimeSheet", TimeSheetSchema);
+export const TimeSheet: Model<ITimesheetModel> = model<ITimesheetModel>("TimeSheet", TimeSheetSchema);
