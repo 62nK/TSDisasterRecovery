@@ -10,7 +10,7 @@ const validation = require('../apis/validation.js');
 
 // Constants
 const router = express.Router();
-const jobcodeSchema = jobModel.job;
+const jobcodeSchema = jobModel.Job;
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());

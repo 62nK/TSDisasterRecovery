@@ -30,6 +30,7 @@ router.get('/list', validation, (request, response)=>{
                 }
                 else{
                     response.status(200).json({machinecodeList: machinecodeList});
+                    console.log("respone")
                 }
             });
         }
