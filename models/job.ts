@@ -10,4 +10,4 @@ export const JobSchema: Schema = new Schema ({
 });
 ​
 export interface IJobModel extends IJob, Document {}
-export const Job: Model<IJobModel> = model<IJobModel>("Job", JobSchema);
+export const Job: Model<IJobModel> = model("Job", JobSchema);

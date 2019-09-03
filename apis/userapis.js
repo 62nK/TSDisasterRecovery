@@ -16,25 +16,25 @@ router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
 // Routes
-router.post('/signup', function(request, response){
-    bcrypt.hash(request.body.password, saltRounds, function(error, hash){
-        if(error){
-            return response.status(500).json({error: error})
-        }
-        else{
-            const newUser = new userSchema({
-                username : request.body.username,
-                role : request.body.role,
-                password : hash
-            });
-            newUser.save().then(function(result){
-                response.status(200).json({success: "new user created successfully!"});
-            }).catch(error=>{
-                response.status(500).json({error: error});
-            });
-        }
-    });
-});
+// router.post('/signup', function(request, response){
+//     bcrypt.hash(request.body.password, saltRounds, function(error, hash){
+//         if(error){
+//             return response.status(500).json({error: error})
+//         }
+//         else{
+//             const newUser = new userSchema({
+//                 username : request.body.username,
+//                 role : request.body.role,
+//                 password : hash
+//             });
+//             newUser.save().then(function(result){
+//                 response.status(200).json({success: "new user created successfully!"});
+//             }).catch(error=>{
+//                 response.status(500).json({error: error});
+//             });
+//         }
+//     });
+// });
 
 router.post('/signin', function(request, response){
     userSchema.findOne({username:request.body.username})

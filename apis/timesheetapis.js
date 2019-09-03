@@ -5,12 +5,15 @@ const jsonwebtoken = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 // Local
 const timesheetModel = require('../models/timesheet');
+// const tcentryModel = require('../models/entry');
 const properties = require('../properties.js');
 const validation = require('../apis/validation.js');
 
 // Constants
 const router = express.Router();
 const timesheetSchema = timesheetModel.TimeSheet;
+// const entrySchema = tcentryModel.TCEntry;
+
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
@@ -24,12 +27,12 @@ router.get('/list', validation, (request, response)=>{
             response.status(403).json({error: error});
         } 
         else{ 
-            machinecodeSchema.find((error, machinecodeList)=>{
+            timesheetSchema.find((error, timesheetList)=>{
                 if(error) {
                     response.status(500).json({error: error});
                 }
                 else{
-                    response.status(200).json({ message: "machinecode updated successfully", machinecodeList: machinecodeList});
+                    response.status(200).json({timesheetList: timesheetList});
                 }
             });
         }
@@ -43,17 +46,14 @@ router.get('/:id', validation, (request, response)=>{
             response.status(403).json({error: error});
         } 
         else if(authData.role==properties.ADMIN){ 
-            machinecodeSchema.find((error, machinecodeList)=>{
+            timesheetSchema.find((error, timesheet)=>{
                 if(error) {
                     response.status(500).json({error: error});
                 }
                 else{
-                    response.status(200).json({ message: "machinecode updated successfully", machinecodeList: machinecodeList});
+                    response.status(200).json({ timesheet: timesheet});
                 }
             });
-        }
-        else{
-            response.status(401).json({failure: "User doesn't have necessary priviledges to complete this action"});
         }
     });
 });
@@ -64,21 +64,28 @@ router.post('/create', validation, (request, response)=>{
         if(error) {
             response.status(403).json({error: error});
         } 
-        else if(authData.role==properties.ADMIN){ 
-            const newMachinecode = new machinecodeSchema({
-                code: request.body.code,
-                description: request.body.description,
-                hourlyRent: request.body.hourlyRent,
-                maxDailyHours: request.body.maxDailyHours
+        else{
+            const newTimesheet= new timesheetSchema({
+                siteCode: request.body.siteCode,
+                contractorName: request.body.contractorName,
+                date: request.body.date,
+                approved: request.body.approved
             });
-            newMachinecode.save().then(function(result){
-                response.status(200).json({success: "new machine code created successfully!"});
+            for(let key in request.body.entries){
+                newTimesheet.entries.push(
+                    {
+                        type: request.body.entries[key].type,
+                        code: request.body.entries[key].code,
+                        hoursWorked: request.body.entries[key].hoursWorked,
+                        total: request.body.entries[key].total
+                    }
+                );
+            }
+            newTimesheet.save().then(function(result){
+                response.status(200).json({success: "new Timesheet created successfully!"});
             }).catch(error=>{
                 response.status(500).json({error: error});
             });
-        }
-        else{
-            response.status(401).json({failure: "User doesn't have necessary priviledges to complete this action"});
         }
     });
 });
@@ -89,19 +96,15 @@ router.post('/update/:id', validation, (request, response, next)=>{
         if(error) {
             response.status(403).json({error: error});
         } 
-        else if(authData.role==properties.ADMIN){ 
-            machinecodeSchema.findByIdAndUpdate(request.params.id, request.body, (error, machinecode)=>{
+        else{
+            timesheetSchema.findByIdAndUpdate(request.params.id, request.body, (error, timesheet)=>{
                 if(error) {
                     response.status(500).json({error: error});
-
                 }
                 else{
-                    response.status(200).json({ message: "machinecode updated successfully", machinecode: machinecode});
+                    response.status(200).json({ timesheet: timesheet});
                 }
             });
-        }
-        else{
-            response.status(401).json({failure: "User doesn't have necessary priviledges to complete this action"});
         }
     });
 });
@@ -113,12 +116,12 @@ router.post('/remove/:id', validation, (request, response, next)=>{
             response.status(403).json({error: error});
         } 
         else if(authData.role==properties.ADMIN){ 
-            machinecodeSchema.findByIdAndDelete(request.params.id, (error, machinecode)=>{
+            timesheetSchema.findByIdAndDelete(request.params.id, (error, timesheet)=>{
                 if(error) {
                     response.status(500).json({error: error});
                 }
                 else{
-                    response.status(200).json({ message: "machinecode removed successfully", machinecode: machinecode});
+                    response.status(200).json({ timesheet: timesheet});
                 }
             });
         }

@@ -1,8 +1,6 @@
-export interface Ientry {
-
-    code: string;
-    hrsWorked: Number;
-    total: Number,
-    type: string // Labor/Machine
-
+export interface ITCEntry{
+    type: string,
+    code: string,
+    hoursWorked: number,
+    total: number
 }

@@ -1,6 +1,8 @@
+import {ITCEntry} from '../interfaces/entry'
 export interface ITimesheet{
-    siteCode: number,
+    code: number,
     contractorName: string,
     date: Date,
-    entryCodes: [String]
+    entries: [ITCEntry],
+    approved: Boolean
 }
