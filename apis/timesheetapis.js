@@ -18,21 +18,41 @@ const timesheetSchema = timesheetModel.TimeSheet;
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
+// Add headers
+router.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,authorization');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
 // Routes
 
 // Get list of machine codes
 router.get('/list', validation, (request, response)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
-            response.status(403).json({error: error});
+            response.status(403).json(error);
         } 
         else{ 
             timesheetSchema.find((error, timesheetList)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    response.status(500).json(error);
                 }
                 else{
-                    response.status(200).json({timesheetList: timesheetList});
+                    response.status(200).json(timesheetList);
                 }
             });
         }
@@ -48,10 +68,10 @@ router.get('/:id', validation, (request, response)=>{
         else if(authData.role==properties.ADMIN){ 
             timesheetSchema.find((error, timesheet)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    response.status(500).json(error);
                 }
                 else{
-                    response.status(200).json({ timesheet: timesheet});
+                    response.status(200).json(timesheet);
                 }
             });
         }
@@ -62,7 +82,7 @@ router.get('/:id', validation, (request, response)=>{
 router.post('/create', validation, (request, response)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
-            response.status(403).json({error: error});
+            response.status(403).json(error);
         } 
         else{
             const newTimesheet= new timesheetSchema({
@@ -84,7 +104,7 @@ router.post('/create', validation, (request, response)=>{
             newTimesheet.save().then(function(result){
                 response.status(200).json({success: "new Timesheet created successfully!"});
             }).catch(error=>{
-                response.status(500).json({error: error});
+                response.status(500).json(error);
             });
         }
     });
@@ -94,15 +114,15 @@ router.post('/create', validation, (request, response)=>{
 router.post('/update/:id', validation, (request, response, next)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
-            response.status(403).json({error: error});
+            response.status(403).json(error);
         } 
         else{
             timesheetSchema.findByIdAndUpdate(request.params.id, request.body, (error, timesheet)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    response.status(500).json(error);
                 }
                 else{
-                    response.status(200).json({ timesheet: timesheet});
+                    response.status(200).json(timesheet);
                 }
             });
         }
@@ -118,10 +138,10 @@ router.post('/remove/:id', validation, (request, response, next)=>{
         else if(authData.role==properties.ADMIN){ 
             timesheetSchema.findByIdAndDelete(request.params.id, (error, timesheet)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    response.status(500).json(error);
                 }
                 else{
-                    response.status(200).json({ timesheet: timesheet});
+                    response.status(200).json(timesheet);
                 }
             });
         }

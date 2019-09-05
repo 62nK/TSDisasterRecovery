@@ -72,7 +72,7 @@ router.get('/:id', validation, (request, response)=>{
                     response.status(500).json({error: error});
                 }
                 else{
-                    response.status(200).json({jobcode: jobcode});
+                    response.status(200).json(jobcode);
                 }
             });
         }
@@ -98,7 +98,7 @@ router.post('/create', validation, (request, response)=>{
             newJobcode.save().then(function(result){
                 response.status(200).json({success: "new job code created successfully!"});
             }).catch(error=>{
-                response.status(500).json({error: error});
+                response.status(500).json(error);
             });
         }
         else{
@@ -111,16 +111,16 @@ router.post('/create', validation, (request, response)=>{
 router.post('/update/:id', validation, (request, response, next)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
-            response.status(403).json({error: error});
+            response.status(403).json(error);
         } 
         else if(authData.role==properties.ADMIN){ 
             jobcodeSchema.findByIdAndUpdate(request.params.id, request.body, (error, jobcode)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    response.status(500).json(error);
 
                 }
                 else{
-                    response.status(200).json({ message: "jobcode updated successfully", jobcode: jobcode});
+                    response.status(200).json(jobcode);
                 }
             });
         }
@@ -139,10 +139,10 @@ router.post('/remove/:id', validation, (request, response, next)=>{
         else if(authData.role==properties.ADMIN){ 
             jobcodeSchema.findByIdAndDelete(request.params.id, (error, jobcode)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    response.status(500).json(error);
                 }
                 else{
-                    response.status(200).json({ message: "jobcode removed successfully", jobcode: jobcode});
+                    response.status(200).json(jobcode);
                 }
             });
         }

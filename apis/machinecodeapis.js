@@ -15,21 +15,41 @@ const machinecodeSchema = machinecodeModel.MachineCode;
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
+// Add headers
+router.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,authorization');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
 // Routes
 
 // Get list of machine codes
 router.get('/list', validation, (request, response)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
-            response.status(403).json({error: error});
+            response.status(403).json(error);
         } 
         else if(authData.role==properties.ADMIN){ 
             machinecodeSchema.find((error, machinecodeList)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    response.status(500).json(error);
                 }
                 else{
-                    response.status(200).json({machinecodeList: machinecodeList});
+                    response.status(200).json(machinecodeList);
                     console.log("respone")
                 }
             });
@@ -44,15 +64,15 @@ router.get('/list', validation, (request, response)=>{
 router.get('/:id', validation, (request, response)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
-            response.status(403).json({error: error});
+            response.status(403).json(error);
         } 
         else if(authData.role==properties.ADMIN){ 
             machinecodeSchema.find((error, machinecode)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    response.status(500).json(error);
                 }
                 else{
-                    response.status(200).json({machinecode: machinecode});
+                    response.status(200).json(machinecode);
                 }
             });
         }
@@ -66,7 +86,7 @@ router.get('/:id', validation, (request, response)=>{
 router.post('/create', validation, (request, response)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
-            response.status(403).json({error: error});
+            response.status(403).json(error);
         } 
         else if(authData.role==properties.ADMIN){ 
             const newMachinecode = new machinecodeSchema({
@@ -78,7 +98,7 @@ router.post('/create', validation, (request, response)=>{
             newMachinecode.save().then(function(result){
                 response.status(200).json({success: "new machine code created successfully!"});
             }).catch(error=>{
-                response.status(500).json({error: error});
+                response.status(500).json(error);
             });
         }
         else{
@@ -91,16 +111,16 @@ router.post('/create', validation, (request, response)=>{
 router.post('/update/:id', validation, (request, response, next)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
-            response.status(403).json({error: error});
+            response.status(403).json(error);
         } 
         else if(authData.role==properties.ADMIN){ 
             machinecodeSchema.findByIdAndUpdate(request.params.id, request.body, (error, machinecode)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    response.status(500).json(error);
 
                 }
                 else{
-                    response.status(200).json({ message: "machinecode updated successfully", machinecode: machinecode});
+                    response.status(200).json(machinecode);
                 }
             });
         }
@@ -114,15 +134,15 @@ router.post('/update/:id', validation, (request, response, next)=>{
 router.post('/remove/:id', validation, (request, response, next)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
-            response.status(403).json({error: error});
+            response.status(403).json(error);
         } 
         else if(authData.role==properties.ADMIN){ 
             machinecodeSchema.findByIdAndDelete(request.params.id, (error, machinecode)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    response.status(500).json(error);
                 }
                 else{
-                    response.status(200).json({ message: "machinecode removed successfully", machinecode: machinecode});
+                    response.status(200).json(machinecode);
                 }
             });
         }
