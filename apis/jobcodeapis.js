@@ -15,26 +15,47 @@ const jobcodeSchema = jobModel.Job;
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
+// Add headers
+router.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,authorization');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
 // Routes
 
 // Get list of job codes
 router.get('/list', validation, (request, response)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
-            response.status(403).json({error: error});
+            return response.status(403).json({error: error});
         } 
         else if(authData.role==properties.ADMIN){ 
             jobcodeSchema.find((error, jobcodeList)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    return response.status(500).json(error);
                 }
                 else{
-                    response.status(200).json({jobcodeList: jobcodeList});
+                    console.log(jobcodeList);
+                    return response.status(200).json(jobcodeList);
                 }
             });
         }
         else{
-            response.status(401).json({failure: "User doesn't have necessary priviledges to complete this action"});
+            return response.status(401).json({failure: "User doesn't have necessary priviledges to complete this action"});
         }
     });
 });
@@ -71,7 +92,7 @@ router.post('/create', validation, (request, response)=>{
             const newJobcode = new jobcodeSchema({
                 code: request.body.code,
                 description: request.body.description,
-                hourlyRate: equest.body.hourlyRate,
+                hourlyRate: request.body.hourlyRate,
                 maxDailyHours: request.body.maxDailyHours
             });
             newJobcode.save().then(function(result){
