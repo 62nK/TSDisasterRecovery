@@ -86,7 +86,7 @@ router.post('/create', validation, (request, response)=>{
         } 
         else{
             const newTimesheet= new timesheetSchema({
-                siteCode: request.body.siteCode,
+                code: request.body.code,
                 contractorName: request.body.contractorName,
                 date: request.body.date,
                 approved: request.body.approved

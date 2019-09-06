@@ -49,7 +49,6 @@ router.get('/list', validation, (request, response)=>{
                     return response.status(500).json(error);
                 }
                 else{
-                    console.log(jobcodeList);
                     return response.status(200).json(jobcodeList);
                 }
             });
@@ -131,7 +130,7 @@ router.post('/update/:id', validation, (request, response, next)=>{
 });
 
 // Remove job code
-router.post('/remove/:id', validation, (request, response, next)=>{
+router.delete('/remove/:id', validation, (request, response, next)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
             response.status(403).json({error: error});

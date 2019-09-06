@@ -50,7 +50,6 @@ router.get('/list', validation, (request, response)=>{
                 }
                 else{
                     response.status(200).json(machinecodeList);
-                    console.log("respone")
                 }
             });
         }
