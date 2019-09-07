@@ -5,13 +5,13 @@ exports.__esModule = true;
 var mongoose_1 = require("mongoose");
 exports.TCEntrySchema = new mongoose_1.Schema({
     code: String,
-    hrsWorked: Number,
+    hours: Number,
     total: Number,
     type: String
 });
 exports.TCEntry = mongoose_1.model("Entry", exports.TCEntrySchema);
 exports.TimeSheetSchema = new mongoose_1.Schema({
-    siteCode: Number,
+    code: String,
     contractorName: String,
     date: Date,
     entries: [exports.TCEntrySchema],

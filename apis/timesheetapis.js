@@ -96,7 +96,7 @@ router.post('/create', validation, (request, response)=>{
                     {
                         type: request.body.entries[key].type,
                         code: request.body.entries[key].code,
-                        hoursWorked: request.body.entries[key].hoursWorked,
+                        hours: request.body.entries[key].hours,
                         total: request.body.entries[key].total
                     }
                 );

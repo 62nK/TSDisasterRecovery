@@ -1,6 +1,6 @@
 import {ITCEntry} from '../interfaces/entry'
 export interface ITimesheet{
-    code: number,
+    code: string,
     contractorName: string,
     date: Date,
     entries: [ITCEntry],

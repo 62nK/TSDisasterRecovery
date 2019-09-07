@@ -7,7 +7,7 @@ import { ITimesheet } from "../interfaces/timesheet";
 
 export const TCEntrySchema: Schema = new Schema({
     code: String,
-    hrsWorked: Number,
+    hours: Number,
     total: Number,
     type: String 
 });
@@ -15,7 +15,7 @@ export interface TCEntryModel extends ITCEntry, Document {}
 export const TCEntry: Model<TCEntryModel> = model("Entry", TCEntrySchema);
 
 export const TimeSheetSchema: Schema = new Schema({
-    siteCode: Number,
+    code: String,
     contractorName: String,
     date: Date,
     entries: [TCEntrySchema],
