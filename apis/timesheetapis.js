@@ -89,7 +89,9 @@ router.post('/create', validation, (request, response)=>{
                 code: request.body.code,
                 contractorName: request.body.contractorName,
                 date: request.body.date,
-                approved: request.body.approved
+                approved: request.body.approved,
+                hours: request.body.hours,
+                total: request.body.total
             });
             for(let key in request.body.entries){
                 newTimesheet.entries.push(
@@ -129,8 +131,8 @@ router.post('/update/:id', validation, (request, response, next)=>{
     });
 });
 
-// Remove machine code
-router.post('/remove/:id', validation, (request, response, next)=>{
+// Remove timesheet
+router.delete('/remove/:id', validation, (request, response, next)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
             response.status(403).json({error: error});

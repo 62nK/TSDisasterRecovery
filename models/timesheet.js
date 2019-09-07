@@ -15,6 +15,8 @@ exports.TimeSheetSchema = new mongoose_1.Schema({
     contractorName: String,
     date: Date,
     entries: [exports.TCEntrySchema],
-    approved: Boolean
+    approved: Boolean,
+    hours: Number,
+    total: Number
 });
 exports.TimeSheet = mongoose_1.model("TimeSheet", exports.TimeSheetSchema);

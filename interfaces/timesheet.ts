@@ -4,5 +4,7 @@ export interface ITimesheet{
     contractorName: string,
     date: Date,
     entries: [ITCEntry],
-    approved: boolean
+    approved: boolean,
+    hours: number,
+    total: number
 }
