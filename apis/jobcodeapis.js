@@ -43,7 +43,7 @@ router.get('/list', validation, (request, response)=>{
         if(error) {
             return response.status(403).json({error: error});
         } 
-        else if(authData.role==properties.ADMIN){ 
+        else{ 
             jobcodeSchema.find((error, jobcodeList)=>{
                 if(error) {
                     return response.status(500).json(error);
@@ -52,9 +52,6 @@ router.get('/list', validation, (request, response)=>{
                     return response.status(200).json(jobcodeList);
                 }
             });
-        }
-        else{
-            return response.status(401).json({failure: "User doesn't have necessary priviledges to complete this action"});
         }
     });
 });
