@@ -66,7 +66,7 @@ router.get('/:id', validation, (request, response)=>{
             response.status(403).json({error: error});
         } 
         else if(authData.role==properties.ADMIN){ 
-            timesheetSchema.find((error, timesheet)=>{
+            timesheetSchema.findOne({ _id: request.params.id },(error, timesheet)=>{
                 if(error) {
                     response.status(500).json(error);
                 }
@@ -113,7 +113,7 @@ router.post('/create', validation, (request, response)=>{
 });
 
 // Edit machine code
-router.post('/update/:id', validation, (request, response, next)=>{
+router.put('/update/:id', validation, (request, response, next)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
             response.status(403).json(error);

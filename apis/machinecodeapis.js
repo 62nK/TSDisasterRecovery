@@ -59,14 +59,14 @@ router.get('/list', validation, (request, response)=>{
     });
 });
 
-// Get list of machine codes
+// Get one machine code
 router.get('/:id', validation, (request, response)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
             response.status(403).json(error);
         } 
         else if(authData.role==properties.ADMIN){ 
-            machinecodeSchema.find((error, machinecode)=>{
+            machinecodeSchema.findOne({ _id: request.params.id},(error, machinecode)=>{
                 if(error) {
                     response.status(500).json(error);
                 }
@@ -107,7 +107,7 @@ router.post('/create', validation, (request, response)=>{
 });
 
 // Edit machine code
-router.post('/update/:id', validation, (request, response, next)=>{
+router.put('/update/:id', validation, (request, response, next)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
             response.status(403).json(error);
@@ -116,7 +116,6 @@ router.post('/update/:id', validation, (request, response, next)=>{
             machinecodeSchema.findByIdAndUpdate(request.params.id, request.body, (error, machinecode)=>{
                 if(error) {
                     response.status(500).json(error);
-
                 }
                 else{
                     response.status(200).json(machinecode);
@@ -130,7 +129,7 @@ router.post('/update/:id', validation, (request, response, next)=>{
 });
 
 // Remove machine code
-router.post('/remove/:id', validation, (request, response, next)=>{
+router.delete('/remove/:id', validation, (request, response, next)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
             response.status(403).json(error);

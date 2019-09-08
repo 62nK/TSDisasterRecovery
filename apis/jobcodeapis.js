@@ -59,16 +59,16 @@ router.get('/list', validation, (request, response)=>{
     });
 });
 
-// Get list of job codes
+// Get one job code
 router.get('/:id', validation, (request, response)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
             response.status(403).json({error: error});
         } 
         else if(authData.role==properties.ADMIN){ 
-            jobcodeSchema.find((error, jobcode)=>{
+            jobcodeSchema.findOne({_id: request.params.id}, (error, jobcode)=>{
                 if(error) {
-                    response.status(500).json({error: error});
+                    response.status(500).json(error);
                 }
                 else{
                     response.status(200).json(jobcode);
@@ -107,7 +107,7 @@ router.post('/create', validation, (request, response)=>{
 });
 
 // Edit job code
-router.post('/update/:id', validation, (request, response, next)=>{
+router.put('/update/:id', validation, (request, response, next)=>{
     jsonwebtoken.verify(request.token, properties.encryption.privateKey, (error, authData)=>{
         if(error) {
             response.status(403).json(error);
@@ -116,7 +116,6 @@ router.post('/update/:id', validation, (request, response, next)=>{
             jobcodeSchema.findByIdAndUpdate(request.params.id, request.body, (error, jobcode)=>{
                 if(error) {
                     response.status(500).json(error);
-
                 }
                 else{
                     response.status(200).json(jobcode);
