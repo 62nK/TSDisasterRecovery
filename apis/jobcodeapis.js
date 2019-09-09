@@ -132,7 +132,7 @@ router.delete('/remove/:id', validation, (request, response, next)=>{
             response.status(403).json({error: error});
         } 
         else if(authData.role==properties.ADMIN){ 
-            jobcodeSchema.findByIdAndDelete(request.params.id, (error, jobcode)=>{
+            jobcodeSchema.findByIdAndRemove(request.params.id, (error, jobcode)=>{
                 if(error) {
                     response.status(500).json(error);
                 }

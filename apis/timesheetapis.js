@@ -118,7 +118,7 @@ router.put('/update/:id', validation, (request, response, next)=>{
         if(error) {
             response.status(403).json(error);
         } 
-        else{
+        else if(authData.role==properties.ADMIN){ 
             timesheetSchema.findByIdAndUpdate(request.params.id, request.body, (error, timesheet)=>{
                 if(error) {
                     response.status(500).json(error);
@@ -127,6 +127,9 @@ router.put('/update/:id', validation, (request, response, next)=>{
                     response.status(200).json(timesheet);
                 }
             });
+        }
+        else{
+            response.status(401).json({failure: "User doesn't have necessary priviledges to complete this action"});
         }
     });
 });
